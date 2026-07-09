@@ -446,7 +446,7 @@ body {
 
   .currency-section {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 0px;
   }
 
   .swap-btn {
@@ -454,6 +454,7 @@ body {
     margin: 0;
     width: 40px;
     height: 40px;
+    margin-top: 15px;
   }
 
   .result-amount {
