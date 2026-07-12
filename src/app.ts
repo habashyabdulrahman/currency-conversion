@@ -294,7 +294,17 @@ class CurrencyConverter {
 const cfg: CurrencyConverterConfig = {
   baseUrl: "https://api.fxratesapi.com/latest",
   defaultCurrencies: { from: "USD", to: "EGP" },
-  allowedCurrencies: ["USD", "EUR", "GBP", "EGP", "CAD", "AUD", "CHF", "PLN"],
+  allowedCurrencies: [
+    "USD",
+    "EUR",
+    "GBP",
+    "EGP",
+    "CAD",
+    "AUD",
+    "CHF",
+    "PLN",
+    "BYN",
+  ],
 };
 
 new CurrencyConverter(cfg);
