@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A fast currency converter and compact 21K/24K gold-value calculator with offline support." />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CurConv" />
+    <meta name="theme-color" content="#f8fafc" />
+
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="./assets/icon-192.png" />
+    <link
+      rel="preconnect"
+      href="https://api.fxratesapi.com"
+      crossorigin="anonymous" />
+    <link
+      rel="preconnect"
+      href="https://openexchangerates.org"
+      crossorigin="anonymous" />
+    <link
+      rel="preconnect"
+      href="https://api.gold-api.com"
+      crossorigin="anonymous" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="icon" href="./assets/icon-192.png" type="image/png" />
+    <title>CurConv – Currency & Gold Calculator</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div>
+          <h1 class="title">CurConv</h1>
+          <p class="subtitle">Currency & gold calculator</p>
+        </div>
+        <button id="themeToggle" class="theme-toggle" type="button">
+          <svg
+            class="sun-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg
+            class="moon-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </header>
+
+      <main class="converter-card">
+        <div class="view-tabs" role="tablist" aria-label="Price tools">
+          <button
+            id="currencyTab"
+            class="view-tab active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="currencyPanel"
+            data-view="currency">
+            Currency
+          </button>
+          <button
+            id="goldTab"
+            class="view-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="goldPanel"
+            data-view="gold">
+            Gold
+          </button>
+        </div>
+
+        <section
+          id="currencyPanel"
+          class="view-panel"
+          role="tabpanel"
+          aria-labelledby="currencyTab">
+          <div class="input-group">
+            <label for="amount" class="label">Amount</label>
+            <input
+              type="number"
+              id="amount"
+              class="amount-input"
+              placeholder="0.00"
+              min="0"
+              step="0.01"
+              inputmode="decimal"
+              autocomplete="off"
+              value="100" />
+            <div class="preset-chips" id="presetChips" aria-label="Preset amounts">
+              <button type="button" class="chip" data-value="1">1</button>
+              <button type="button" class="chip" data-value="100">100</button>
+              <button type="button" class="chip" data-value="500">500</button>
+              <button type="button" class="chip" data-value="1000">1,000</button>
+              <button type="button" class="chip" data-value="5000">5,000</button>
+              <button type="button" class="chip" data-value="7000">7,000</button>
+              <button type="button" class="chip" data-value="10000">10,000</button>
+            </div>
+          </div>
+
+          <div class="currency-section">
+            <div class="currency-group">
+              <label for="fromCurrency" class="label">From</label>
+              <div class="select-wrapper">
+                <select id="fromCurrency" class="currency-select"></select>
+              </div>
+            </div>
+
+            <button
+              id="swapBtn"
+              class="swap-btn"
+              type="button"
+              title="Swap currencies (Alt+S)"
+              aria-label="Swap currencies">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12m0-12l4 4m-4-4l-4 4" />
+              </svg>
+            </button>
+
+            <div class="currency-group">
+              <label for="toCurrency" class="label">To</label>
+              <div class="select-wrapper">
+                <select id="toCurrency" class="currency-select"></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-group">
+            <button id="convertBtn" class="convert-btn" type="button">
+              Convert
+            </button>
+          </div>
+
+          <div
+            id="result"
+            class="result-section hidden"
+            role="button"
+            tabindex="0"
+            aria-live="polite"
+            aria-label="Copy converted amount"
+            aria-busy="false">
+            <span class="copy-hint">Click or press Enter to copy</span>
+            <div class="result-amount"></div>
+            <div class="exchange-rate"></div>
+            <div class="last-updated"></div>
+            <div class="copied-toast" id="copiedToast" role="status">
+              Copied!
+            </div>
+          </div>
+
+          <div
+            id="error"
+            class="error-message hidden"
+            role="alert"
+            aria-live="assertive"></div>
+          <div id="loading" class="loading hidden" role="status" aria-live="polite">
+            <div class="spinner" aria-hidden="true"></div>
+            Loading…
+          </div>
+        </section>
+
+        <section
+          id="goldPanel"
+          class="view-panel hidden"
+          role="tabpanel"
+          aria-labelledby="goldTab">
+          <div class="gold-heading">
+            <div class="gold-icon" aria-hidden="true">Au</div>
+            <div>
+              <h2>Gold calculator</h2>
+              <p>Choose the karat, enter the weight, and see its current value.</p>
+            </div>
+          </div>
+
+          <div class="gold-controls">
+            <div class="currency-group">
+              <label for="goldCurrency" class="label">Display currency</label>
+              <div class="select-wrapper">
+                <select id="goldCurrency" class="currency-select"></select>
+              </div>
+            </div>
+            <button
+              id="refreshGoldBtn"
+              class="refresh-gold-btn"
+              type="button"
+              aria-label="Refresh gold price">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5" />
+                <path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5" />
+              </svg>
+              Refresh
+            </button>
+          </div>
+
+          <div id="goldLoading" class="loading hidden" role="status" aria-live="polite">
+            <div class="spinner gold-spinner" aria-hidden="true"></div>
+            Loading gold price…
+          </div>
+
+          <div
+            id="goldError"
+            class="error-message hidden"
+            role="alert"
+            aria-live="assertive"></div>
+
+          <div id="goldResult" class="gold-result hidden" aria-live="polite" aria-busy="false">
+            <section class="gold-hero gold-calculator-hero" aria-labelledby="goldCalculatorTitle">
+              <div class="compact-calculator-heading">
+                <div>
+                  <span class="gold-eyebrow">Calculate your gold</span>
+                  <h3 id="goldCalculatorTitle">Current estimated value</h3>
+                </div>
+              </div>
+
+              <div class="compact-gold-controls">
+                <label class="gold-compact-field" for="goldKarat">
+                  <span>Karat</span>
+                  <span class="select-wrapper">
+                    <select id="goldKarat" class="currency-select compact-select">
+                      <option value="21" selected>21K</option>
+                      <option value="24">24K</option>
+                    </select>
+                  </span>
+                </label>
+
+                <label class="gold-compact-field" for="goldWeight">
+                  <span>Weight</span>
+                  <span class="weight-input-wrapper">
+                    <input
+                      id="goldWeight"
+                      class="gold-weight-input"
+                      type="number"
+                      min="0"
+                      max="1000000000"
+                      step="0.01"
+                      inputmode="decimal"
+                      autocomplete="off"
+                      value="1"
+                      placeholder="0.00" />
+                    <span aria-hidden="true">g</span>
+                  </span>
+                </label>
+              </div>
+
+              <p
+                id="goldCalculatorError"
+                class="calculator-error hidden"
+                role="alert"></p>
+
+              <div class="gold-calculated-value">
+                <span id="goldCalculationLabel">Value of 1 g · 21K</span>
+                <strong id="goldCalculatedValue">—</strong>
+                <span id="goldSelectedUnitPrice" class="gold-unit">— per gram</span>
+              </div>
+            </section>
+
+            <div class="gold-grid gold-grid-single">
+              <article class="gold-price-card">
+                <span class="karat-label">24K</span>
+                <strong id="gold24Price">—</strong>
+                <span>per gram</span>
+              </article>
+            </div>
+
+            <div id="goldUpdated" class="gold-updated"></div>
+            <p class="gold-disclaimer">
+              Estimate based on the international spot price. The actual selling or
+              buying price may differ because of workmanship, dealer margins, taxes,
+              and local market conditions.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <noscript>This app requires JavaScript to convert currencies and show gold prices.</noscript>
+    <script type="module" src="./dist/app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./service-worker.js", { scope: "./" })
+            .then((registration) => {
+              console.info("Service Worker registered:", registration.scope);
+            })
+            .catch((error) => {
+              console.error("Service Worker registration failed:", error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

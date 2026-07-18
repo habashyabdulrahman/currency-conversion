@@ -1,0 +1,25 @@
+{
+  "name": "currency-conversion",
+  "version": "1.4.0",
+  "private": true,
+  "type": "module",
+  "description": "A lightweight TypeScript currency converter and compact 21K/24K gold-value calculator PWA.",
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  },
+  "keywords": [
+    "currency",
+    "converter",
+    "gold",
+    "typescript",
+    "pwa"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
